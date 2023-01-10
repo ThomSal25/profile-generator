@@ -1,5 +1,14 @@
 let personState = [];
 
+const pendingCounter = document.querySelector("#pending-counter");
+let counter = 0;
+
+// Daten aus dem LocalStorage holen
+counter = JSON.parse(localStorage.getItem("pendingCounter"));
+//Daten aus LocalStorage anzeigen im HTML
+pendingCounter.innerText = counter;
+
+
 // fetch api url
 async function loadContacts(num) {
   try {
@@ -22,7 +31,8 @@ function createContactHtmlNode(userData) {
 
   const closeSvg = document.createElement("img");
   closeSvg.src = "pic/x-circle-fill.svg";
-  closeSvg.addEventListener("click", removeProfile);
+    closeSvg.addEventListener("click", removeProfile);
+    closeSvg.classList.add("remove")
 
   const userImgElement = document.createElement("img");
   userImgElement.src = userData.picture;
@@ -43,7 +53,18 @@ function createContactHtmlNode(userData) {
   connectBtnElement.innerText = "Connect";
 
   connectBtnElement.addEventListener("click", function () {
-    connectBtnElement.innerText = "Pending";
+    if (connectBtnElement.innerText === "Connect") {
+        connectBtnElement.innerText = "Pending";
+        //wenn connect gedrückt wird soll pending 1 hoch zählen
+        counter++;
+      } else {
+        connectBtnElement.innerText = "Connect";
+        //wenn pending zurückgenommen wird soll Zähler zurückzählen
+        counter--;
+      }
+      //mit click wird Anzahl der pending invitations geändert
+      pendingCounter.innerText = counter;
+      save();
   });
 
   listElement.append(
@@ -70,6 +91,10 @@ function removeProfile() {
   this.closest("li").remove();
   init(1)
 }
+
+function save() {
+    localStorage.setItem("pendingCounter", JSON.stringify(counter));
+  }
 
 async function init(num) {
   await loadContacts(num);
