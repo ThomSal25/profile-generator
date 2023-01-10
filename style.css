@@ -1,0 +1,14 @@
+ul{
+    list-style-type: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+li{
+    margin: .5rem;
+}
+
+.back{
+    max-width: 10rem;
+    max-height: 3rem;
+}
